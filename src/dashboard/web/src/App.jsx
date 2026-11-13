@@ -28,8 +28,10 @@ function useData() {
 
   useEffect(() => {
     load()
-    const proto = location.protocol === 'https:' ? 'wss' : 'ws'
-    ws.current = new WebSocket(`${proto}://${location.host}/ws/stream`)
+    const wsBase = import.meta.env.VITE_API_URL
+      ? import.meta.env.VITE_API_URL.replace(/^http/, 'ws')
+      : `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}`
+    ws.current = new WebSocket(`${wsBase}/ws/stream`)
     ws.current.onmessage = e => {
       try {
         const m = JSON.parse(e.data)
