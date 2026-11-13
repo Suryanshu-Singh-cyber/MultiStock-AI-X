@@ -19,16 +19,29 @@ log = get_logger(__name__)
 LAST_ERROR: str | None = None
 
 
+def _ingest_safe() -> None:
+    from src.data.historical import ingest_all
+    ingest_all()
+
+
 def daily_job() -> None:
     """The 15:45 IST job: fetch latest -> features -> forecast -> publish."""
     global LAST_ERROR
     LAST_ERROR = None
     log.info("=== daily inference job starting ===")
     try:
-        # refresh market data first (best effort — inference uses latest parquet)
+        # refresh market data first (best effort, hard-capped — yfinance can
+        # hang for many minutes on rate-limited datacenter IPs)
         try:
-            from src.data.historical import ingest_all
-            ingest_all()
+            import os
+            import concurrent.futures as cf
+            if os.environ.get("SKIP_INGEST") != "1":
+                with cf.ThreadPoolExecutor(max_workers=1) as ex:
+                    fut = ex.submit(_ingest_safe)
+                    try:
+                        fut.result(timeout=240)
+                    except cf.TimeoutError:
+                        log.warning("data ingest timed out after 240s — using cached parquet")
         except Exception as e:
             log.warning("data ingest failed, using cached parquet: %s", e)
         payload = run_daily_inference()
