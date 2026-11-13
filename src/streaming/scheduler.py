@@ -25,6 +25,12 @@ def daily_job() -> None:
     LAST_ERROR = None
     log.info("=== daily inference job starting ===")
     try:
+        # refresh market data first (best effort — inference uses latest parquet)
+        try:
+            from src.data.historical import ingest_all
+            ingest_all()
+        except Exception as e:
+            log.warning("data ingest failed, using cached parquet: %s", e)
         payload = run_daily_inference()
         # score yesterday's forecast now that today's return is known
         try:

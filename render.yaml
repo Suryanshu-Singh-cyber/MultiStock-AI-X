@@ -9,3 +9,5 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.13.3
+      - key: RUN_SCHEDULER
+        value: "1"

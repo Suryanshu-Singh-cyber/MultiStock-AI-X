@@ -4,8 +4,6 @@ __pycache__/
 venv/
 .env
 logs/
-data/raw/*.parquet
-data/processed/*.parquet
 data/live/*.parquet
 .pytest_cache/
 .ipynb_checkpoints/

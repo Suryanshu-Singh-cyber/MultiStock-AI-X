@@ -21,6 +21,14 @@ def main() -> None:
         print(f"[start] data refresh failed ({e}) — serving with existing data", flush=True)
 
     print("[start] launching uvicorn on $PORT", flush=True)
+
+    # optional in-process daily scheduler (15:45 IST) — set RUN_SCHEDULER=1
+    if __import__("os").environ.get("RUN_SCHEDULER") == "1":
+        import threading
+        from src.streaming.scheduler import start_scheduler
+        threading.Thread(target=start_scheduler, daemon=True).start()
+        print("[start] daily scheduler enabled (15:45 IST)", flush=True)
+
     uvicorn.run("src.api.main:app", host="0.0.0.0", port=int(__import__("os").environ.get("PORT", 8000)))
 
 
