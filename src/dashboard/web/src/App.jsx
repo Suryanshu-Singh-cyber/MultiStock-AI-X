@@ -8,7 +8,7 @@ import CommandCenter from './components/CommandCenter'
 import Performance from './components/Performance'
 import './styles.css'
 
-const API = '/api'
+const API = import.meta.env.VITE_API_URL || '/api'
 
 function useData() {
   const [data, setData] = useState(null)
