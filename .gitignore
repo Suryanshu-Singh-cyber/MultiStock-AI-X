@@ -10,6 +10,5 @@ data/live/*.parquet
 *.egg-info/
 node_modules/
 dist/
-models_ckpt/*.pt
 reports/live/*.json
 data/live/*.json
