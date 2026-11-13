@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: multistock-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt -r requirements-ml.txt
+    startCommand: python start_render.py
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.3
