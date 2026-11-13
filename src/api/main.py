@@ -139,6 +139,21 @@ def refresh_status():
     return _refresh_state
 
 
+@app.get("/debug/paths")
+def debug_paths():
+    import os
+    from src.core.config import ROOT
+    raw = ROOT / "data" / "raw"
+    return {
+        "cwd": os.getcwd(),
+        "root": str(ROOT),
+        "raw_dir": str(raw),
+        "raw_exists": raw.exists(),
+        "raw_files": sorted(p.name for p in raw.glob("*.parquet"))[:20] if raw.exists() else [],
+        "data_dirs": [str(p) for p in Path("/opt/render/project").rglob("data")][:5] if Path("/opt/render/project").exists() else "n/a",
+    }
+
+
 @app.get("/forecast/history")
 def forecast_history(days: int = 90):
     if not REPORTS_LIVE.exists():
