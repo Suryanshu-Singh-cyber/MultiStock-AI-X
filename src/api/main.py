@@ -111,7 +111,7 @@ _refresh_state = {"running": False, "started": None, "done": None, "error": None
 def forecast_refresh():
     """Trigger the full daily pipeline now (data refresh -> inference -> score)."""
     import threading
-    from src.streaming.scheduler import daily_job
+    import src.streaming.scheduler as sched
 
     if _refresh_state["running"]:
         return {"status": "already_running"}
@@ -121,7 +121,9 @@ def forecast_refresh():
                               started=datetime.now().isoformat(timespec="seconds"),
                               error=None)
         try:
-            daily_job()
+            sched.daily_job()
+            if sched.LAST_ERROR:
+                _refresh_state["error"] = sched.LAST_ERROR
         except Exception as e:  # noqa: BLE001
             _refresh_state["error"] = str(e)
         finally:

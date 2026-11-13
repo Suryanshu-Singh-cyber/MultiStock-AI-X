@@ -16,9 +16,13 @@ from src.streaming.inference import run_daily_inference
 
 log = get_logger(__name__)
 
+LAST_ERROR: str | None = None
+
 
 def daily_job() -> None:
     """The 15:45 IST job: fetch latest -> features -> forecast -> publish."""
+    global LAST_ERROR
+    LAST_ERROR = None
     log.info("=== daily inference job starting ===")
     try:
         payload = run_daily_inference()
@@ -33,6 +37,7 @@ def daily_job() -> None:
         bus.cache_set("forecast:latest", payload)
         log.info("=== daily inference job done: status=%s ===", payload["status"])
     except Exception as e:
+        LAST_ERROR = str(e)
         log.exception("daily inference job FAILED: %s", e)
         bus = get_bus()
         bus.publish("forecast_update", {
