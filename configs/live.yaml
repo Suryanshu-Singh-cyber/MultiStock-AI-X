@@ -1,0 +1,26 @@
+# Live-mode settings (Stage 24+). Secrets go in .env — NEVER here.
+price_feed:
+  backend: yf_poll          # yf_poll | upstox_ws | indstocks_ws
+  poll_seconds: 60
+
+# Optional broker WebSocket credentials — set via environment variables:
+#   UPSTOX_API_KEY, UPSTOX_ACCESS_TOKEN, INDSTOCKS_API_KEY, ...
+broker:
+  upstox:
+    api_key: ${UPSTOX_API_KEY:-}
+    access_token: ${UPSTOX_ACCESS_TOKEN:-}
+  indstocks:
+    api_key: ${INDSTOCKS_API_KEY:-}
+
+news:
+  gdelt_enabled: true
+  newsapi_enabled: false
+  newsapi_key: ${NEWSAPI_KEY:-}
+
+redis:
+  url: ${REDIS_URL:-redis://localhost:6379/0}
+
+events:
+  price_tick: price_tick
+  news_event: news_event
+  forecast_update: forecast_update

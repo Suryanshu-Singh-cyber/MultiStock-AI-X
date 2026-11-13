@@ -1,0 +1,52 @@
+project:
+  name: multistock_ai_x
+  target_symbol: POWERGRID.NS
+  forecast_horizon_days: 1          # next available NSE trading day
+
+paths:
+  data_raw: data/raw
+  data_processed: data/processed
+  data_live: data/live
+  reports: reports
+
+history:
+  start: "2005-06-01"               # 01-Jun-2005
+  end: null                         # null = today (rolling)
+
+data_sources:
+  historical: yfinance              # free, complete 2005->today
+  realtime_price: yfinance_poll     # polling backend (default)
+  # realtime_price: upstox_ws       # optional broker WebSocket (Stage 24)
+  news: gdelt                       # free; NewsAPI optional fallback
+
+live:
+  poll_interval_seconds: 60         # yfinance polling during market hours
+  market_open: "09:15"
+  market_close: "15:30"
+  timezone: Asia/Kolkata
+  inference_time: "15:45"           # after NSE close
+  news_poll_interval_minutes: 15
+  bar_persist_interval_minutes: 5
+
+trading_calendar:
+  exchange: NSE
+  # holidays loaded dynamically; weekends always skipped
+
+model:
+  retrain_schedule: weekly          # models retrain on schedule, not per tick
+  walk_forward:
+    train_window_days: 1260         # ~5y rolling train
+    valid_window_days: 126          # ~6m validation
+    test_window_days: 21            # ~1m test, rolled forward
+  transaction_costs:
+    brokerage_per_side: 0.0003       # ~0.03%
+    statutory_per_side: 0.0005       # STT+exchange+GST ~0.05%
+    slippage_per_side: 0.0005
+
+uncertainty:
+  conformal_alpha: 0.10             # 90% intervals
+  disagreement_threshold: 0.6
+
+kill_switch:
+  min_directional_accuracy_20d: 0.45
+  max_input_staleness_days: 2

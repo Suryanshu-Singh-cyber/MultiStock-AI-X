@@ -1,0 +1,27 @@
+# Symbols the pipeline tracks. All yfinance tickers.
+# target: the stock we forecast.
+# peers: same-sector peers used for graph / relative features.
+# indices: market + sector benchmarks for decomposition.
+# macro: external drivers.
+
+target: POWERGRID.NS
+
+peers:
+  - NTPC.NS
+  - TATAPOWER.NS
+  - ADANIPOWER.NS
+  - JSWENERGY.NS
+  - NHPC.NS
+  - SJVN.NS
+  - ONGC.NS
+  - BPCL.NS
+  - RELIANCE.NS
+
+indices:
+  nifty_50: ^NSEI
+  sector_energy: ^CNXENERGY
+  india_vix: ^INDIAVIX
+
+macro:
+  usd_inr: USDINR=X
+  crude: CL=F

@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+logs/
+data/raw/*.parquet
+data/processed/*.parquet
+data/live/*.parquet
+.pytest_cache/
+.ipynb_checkpoints/
+*.egg-info/
+node_modules/
+dist/
+models_ckpt/*.pt
+reports/live/*.json
+data/live/*.json

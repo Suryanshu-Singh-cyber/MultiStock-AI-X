@@ -1,0 +1,11 @@
+# Heavy ML deps — install when we reach Stage 8+
+xgboost>=2.1,<4.0
+lightgbm>=4.5,<5.0
+torch>=2.4,<3.0
+hmmlearn>=0.3,<1.0
+mapie>=1.0,<2.0
+transformers>=4.44,<5.0
+spacy>=3.7,<4.0
+networkx>=3.3,<4.0
+websockets>=13.0,<17.0
+prometheus-client>=0.21,<1.0
